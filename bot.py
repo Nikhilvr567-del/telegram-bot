@@ -1,6 +1,5 @@
 from telegram import Update
-from telegram.ext import ApplicationBuilder, MessageHandler, filters, ContextTypes
-
+from telegram.ext import Application, MessageHandler, filters, ContextTypes
 import os
 
 TOKEN = os.environ.get("BOT_TOKEN")
@@ -8,7 +7,7 @@ TOKEN = os.environ.get("BOT_TOKEN")
 async def delete_messages(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.channel_post:
         text = update.channel_post.text
-        
+
         if text and (
             "teleprotectorbot" in text.lower() or
             "reports are blocked" in text.lower() or
@@ -22,7 +21,8 @@ async def delete_messages(update: Update, context: ContextTypes.DEFAULT_TYPE):
             except Exception as e:
                 print(e)
 
-app = ApplicationBuilder().token(TOKEN).build()
+app = Application.builder().token(TOKEN).build()
+
 app.add_handler(MessageHandler(filters.ALL, delete_messages))
 
 app.run_polling()
